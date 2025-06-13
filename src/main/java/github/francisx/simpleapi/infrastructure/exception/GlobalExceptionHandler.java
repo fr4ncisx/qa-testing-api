@@ -3,6 +3,7 @@ package github.francisx.simpleapi.infrastructure.exception;
 import github.francisx.simpleapi.infrastructure.exception.error.RoleNotAllowedEx;
 import github.francisx.simpleapi.infrastructure.exception.error.SQLNotFoundEx;
 import github.francisx.simpleapi.infrastructure.exception.error.UnauthorizedEx;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,18 +16,25 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedEx.class)
-    public ResponseEntity<ExceptionResponse> rejectedUnauthorizedRequests(UnauthorizedEx ex){
+    public ResponseEntity<ExceptionResponse> rejectedUnauthorizedRequests(UnauthorizedEx ex) {
         return ResponseEntity.status(401).body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(RoleNotAllowedEx.class)
-    public ResponseEntity<ExceptionResponse> roleNotAuthorized(RoleNotAllowedEx ex){
+    public ResponseEntity<ExceptionResponse> roleNotAuthorized(RoleNotAllowedEx ex) {
         return ResponseEntity.status(401).body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(SQLNotFoundEx.class)
-    public ResponseEntity<ExceptionResponse> sqlExceptions(SQLNotFoundEx ex){
+    public ResponseEntity<ExceptionResponse> sqlExceptions(SQLNotFoundEx ex) {
         return ResponseEntity.status(404).body(new ExceptionResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionResponse> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        if (ex.getMessage().contains("Data too long") && ex.getRootCause() != null)
+            return ResponseEntity.status(400).body(new ExceptionResponse(ex.getRootCause().getLocalizedMessage()));
+        return ResponseEntity.status(400).body(new ExceptionResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -37,7 +45,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(listOfErrors, HttpStatus.BAD_REQUEST);
     }
 
-    public record ExceptionResponse(String message){}
+    public record ExceptionResponse(String message) {
+    }
 
-    public record FieldErrors(String key, String message){}
+    public record FieldErrors(String key, String message) {
+    }
 }
+
