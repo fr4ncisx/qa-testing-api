@@ -1,0 +1,29 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  application:
+    name: SimpleAPI
+  datasource:
+    url: jdbc:mysql://localhost:3306/api_test?createDatabaseIfNotExist=true
+    username: root
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    active: none
+server:
+  error:
+    include-stacktrace: never
+
+## SWAGGER ORDER ALPHABETICALLY
+springdoc:
+  swagger-ui:
+    tagsSorter: alpha
+
+secret:
+  key: "${SECRET}"
+
+token:
+  expiration:
+    time: "${EXPIRATION_MINUTES}"
+
