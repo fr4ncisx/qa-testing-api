@@ -7,7 +7,7 @@ import github.francisx.simpleapi.infrastructure.security.model.AccessToken;
 import github.francisx.simpleapi.infrastructure.security.model.enums.Role;
 import github.francisx.simpleapi.infrastructure.security.persistence.AccessTokenRepository;
 import github.francisx.simpleapi.infrastructure.security.service.ITokenService;
-import github.francisx.simpleapi.utils.MapperUtils;
+import github.francisx.simpleapi.utils.MapStructToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,7 @@ public class TokenServiceImpl implements ITokenService {
     @Value("${token.expiration.time}")
     private Long minutes;
 
+    private final MapStructToken mapStructToken;
     private final AccessTokenRepository tokenRepository;
 
     @Transactional
@@ -36,7 +37,7 @@ public class TokenServiceImpl implements ITokenService {
         var expirationTime = LocalDateTime.now().plusMinutes(minutes);
         AccessToken token = new AccessToken(null, randomizeText(512), expirationTime, false, randomizeRole());
         tokenRepository.save(token);
-        return MapperUtils.convertDTO(token, AccessTokenResponse.class);
+        return mapStructToken.toDto(token);
     }
 
     @Override

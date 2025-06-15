@@ -7,7 +7,7 @@ import github.francisx.simpleapi.infrastructure.exception.error.SQLNotFoundEx;
 import github.francisx.simpleapi.infrastructure.persistence.ProductRepository;
 import github.francisx.simpleapi.infrastructure.security.model.enums.Role;
 import github.francisx.simpleapi.infrastructure.security.service.ITokenService;
-import github.francisx.simpleapi.utils.MapperUtils;
+import github.francisx.simpleapi.utils.MapStructProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +20,7 @@ import java.util.UUID;
 public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final ITokenService tokenService;
+    private final MapStructProduct mapStructProduct;
 
     @Override
     public Product getProduct(UUID id) {
@@ -48,7 +49,7 @@ public class ProductServiceImpl implements IProductService {
     public void createProduct(ProductRequest productRequest, String token) {
         var accessToken = tokenService.validateAndGet(token);
         tokenService.allowedRoles(accessToken.getRole(), Role.ADMIN, Role.AGENT, Role.EMPLOYEE);
-        productRepository.save(MapperUtils.convertDTO(productRequest, Product.class));
+        productRepository.save(mapStructProduct.toEntity(productRequest));
     }
 
     @Transactional
