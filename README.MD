@@ -19,12 +19,16 @@ Está RESTful API está principalmente enfocada para QA que se deseen iniciar en
 - Arquitectura desacoplada ideal para entornos de pruebas (QA).
 - Creador de imagen y contenedor de docker, mas eliminación de contenedor.
 
+## Swagger UI Preview
+![img.png](src/main/resources/static/img.png)
+Esta es la vista previa de los endpoints disponibles
+
 ## Requisitos Técnicos
 
 #### - [JDK 21](https://www.oracle.com/ar/java/technologies/downloads/#jdk21-windows)
 #### - [MySQL 8+](https://dev.mysql.com/downloads/installer/)
 #### - [Docker (opcional)](https://docs.docker.com/desktop/setup/install/windows-install/)
-#### - Maven (No es requerido ya que lo trae embebido, pero se puede usar también)
+#### - Maven (No es requerido usar el wrapper)
 
 ## Cómo Ejecutar
 
